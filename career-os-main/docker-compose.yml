@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg18
+    container_name: career-os-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: career_os
+      POSTGRES_USER: career
+      POSTGRES_PASSWORD: career_os_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - career_os_postgres:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+
+  api:
+    build:
+      context: ./api
+    container_name: career-os-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://career:career_os_password@postgres:5432/career_os
+      LLM_PROVIDER: ${LLM_PROVIDER:-none}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.6-luna}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: career-os-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: career_os
+      DB_POSTGRESDB_USER: career
+      DB_POSTGRESDB_PASSWORD: career_os_password
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: admin
+      N8N_BASIC_AUTH_PASSWORD: career_os_n8n
+      N8N_SECURE_COOKIE: "false"
+      GENERIC_TIMEZONE: America/Sao_Paulo
+    depends_on:
+      - postgres
+    volumes:
+      - career_os_n8n:/home/node/.n8n
+
+volumes:
+  career_os_postgres:
+  career_os_n8n:

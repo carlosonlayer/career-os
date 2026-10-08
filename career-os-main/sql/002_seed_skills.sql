@@ -1,0 +1,42 @@
+INSERT INTO skills (canonical_name, category) VALUES
+('Python','Programming'),
+('FastAPI','Backend'),
+('Django','Backend'),
+('SQL','Data'),
+('PostgreSQL','Data'),
+('Git','Engineering'),
+('GitHub','Engineering'),
+('GitHub Actions','CI/CD'),
+('Docker','Infrastructure'),
+('CI/CD','Infrastructure'),
+('Linux','Infrastructure'),
+('Cloud','Infrastructure'),
+('AWS','Cloud'),
+('Azure','Cloud'),
+('GCP','Cloud'),
+('LLM APIs','Generative AI'),
+('Prompt Engineering','Generative AI'),
+('RAG','Generative AI'),
+('Embeddings','Generative AI'),
+('pgvector','Generative AI'),
+('Vector Databases','Generative AI'),
+('LangChain','Agents'),
+('LangGraph','Agents'),
+('Agents','Agents'),
+('Tool Calling','Agents'),
+('MCP','Agents'),
+('Redis','Infrastructure'),
+('Observability','Operations'),
+('AI Evaluation','Generative AI'),
+('Kubernetes','Infrastructure'),
+('Terraform','Infrastructure'),
+('Machine Learning','AI'),
+('PyTorch','AI'),
+('TensorFlow','AI')
+ON CONFLICT (canonical_name) DO NOTHING;
+
+INSERT INTO projects (name, description, status) VALUES
+('BTLNK Technical Lab','Regulatory Intelligence Engineering Proof of Work','planned'),
+('Izis Engineering Case','Conversational AI and automation engineering case','planned'),
+('AI Engineering Lab','Market-driven project for closing identified competency gaps','planned')
+ON CONFLICT (name) DO NOTHING;

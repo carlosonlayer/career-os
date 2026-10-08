@@ -1,0 +1,85 @@
+{
+  "name": "Career OS — Job Intake v1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "career-os/job",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "job-webhook",
+      "name": "Job Intake Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -520,
+        0
+      ],
+      "webhookId": "career-os-job-intake"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/jobs/intake",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body ?? $json) }}",
+        "options": {}
+      },
+      "id": "job-api",
+      "name": "Career OS API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        40,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Job Intake Webhook": {
+      "main": [
+        [
+          {
+            "node": "Career OS API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Career OS API": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "career-os-job-intake-v1"
+}
